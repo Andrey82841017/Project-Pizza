@@ -8,9 +8,11 @@ import { useState, useEffect } from "react";
 import axiosInstance, { setAccessToken } from "./axiosInstance";
 
 import ProtectedRoute from "./ProtectedRoute";
+import RestoranPage from "./pages/RestoranPage/RestoranPage";
 
 function App() {
   const [user, setUser] = useState({});
+  const [restaurants, setRestaurants] =useState()
 
   useEffect(() => {
     axiosInstance
@@ -20,11 +22,20 @@ function App() {
         setAccessToken(res.data.accessToken);
       });
   }, []);
-
+  useEffect(() => {
+    fetch('https://private-anon-30e145911b-pizzaapp.apiary-mock.com/restaurants/')
+      .then((res) => res.json())
+      .then((data) => {
+        setRestaurants(data);
+      
+      })
+      .catch((err) => console.log(err));
+    }, []);
+    
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <Root user={user} setUser={setUser} />,
+      element: <Root user={user} setUser={setUser} restaurants={restaurants} />,
       children: [
         {
           path: "/",
@@ -45,6 +56,10 @@ function App() {
               <SignupPage setUser={setUser} />
             </ProtectedRoute>
           ),
+        },
+        {
+          path: "/restoran/:id",
+          element: <RestoranPage user={user} />,
         },
       ],
     },

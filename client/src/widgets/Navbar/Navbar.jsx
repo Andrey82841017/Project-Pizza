@@ -1,8 +1,10 @@
+import { Avatar, Menu } from '@chakra-ui/react';
 import axiosInstance, { setAccessToken } from '../../axiosInstance';
 import styles from './Navbar.module.css';
 import { Link, useNavigate } from 'react-router-dom';
+import DrawerExample from '../../components/Drawer/DrawerExample';
 
-export default function Navbar({ user, setUser }) {
+export default function Navbar({ user, setUser, restorans }) {
   const navigate = useNavigate();
 
   const logoutHandler = async () => {
@@ -17,27 +19,27 @@ export default function Navbar({ user, setUser }) {
   };
 
   return (
-    <div className={styles.wrapper}>
-      <div>
-        <button onClick={() => navigate(-1)}>⬅️</button>
-        <button onClick={() => navigate(+1)}>➡️</button>
+    <Menu>
+      <div className={styles.wrapper}>
+        <div className={styles.left}>
+          <Link to='/'></Link>
+          <DrawerExample restorans={restorans}/>
+        </div>
+        <div className={styles.right}>
+          {user?.username ? (
+            <>
+              <Avatar name={user.username} />
+              {/* <Link to='/'>{user.username}</Link> */}
+              <Link onClick={logoutHandler}>Выйти</Link>
+            </>
+          ) : (
+            <>
+              <Link to='/signin'>Войти</Link>
+              <Link to='/signup'>Регистрация</Link>
+            </>
+          )}
+        </div>
       </div>
-      <div className={styles.left}>
-        <Link to='/'>На главную</Link>
-      </div>
-      <div className={styles.right}>
-        {user?.username ? (
-          <>
-            <Link to='/'>{user.username}</Link>
-            <Link onClick={logoutHandler}>Выйти</Link>
-          </>
-        ) : (
-          <>
-            <Link to='/signin'>Войти</Link>
-            <Link to='/signup'>Регистрация</Link>
-          </>
-        )}
-      </div>
-    </div>
+    </Menu>
   );
 }

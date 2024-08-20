@@ -6,6 +6,7 @@ import axiosInstance from '../../axiosInstance';
 
 export default function HomePage({ user }) {
   const [entries, setEntries] = useState([]);
+  
 
   useEffect(() => {
     axiosInstance
